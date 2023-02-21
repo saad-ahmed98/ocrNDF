@@ -14,7 +14,7 @@ def hello_world():
     return "<p>NDFocr</p>"
 
 # views of the website, each function corresponds to a page
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def convert(o):
@@ -28,7 +28,7 @@ def easyOCR():
         query = request.files['img'].stream.read()
         if not query:
                 abort(404)
-        reader = easyocr.Reader(['fr', 'en'], gpu=False)
+        reader = easyocr.Reader(["en"],gpu=False,model_storage_directory=BASE_DIR,download_enabled=False)
 
         resultatOCR = {
             "base64":{
