@@ -4,8 +4,6 @@ from PIL import Image, ImageDraw, ImageOps, ImageFont
 import io
 from io import BytesIO
 import base64
-from django.utils.encoding import force_str
-
 
 categorie = {
     "restauration": ["restaurant", "cafe", "buvette", "cabaret", "bar", "bistrot", "restauration", "fast-food", "grill-room", "rotisserie", "self-service", "cremerie", "grillade", "pizzeria", "menu", "terrasse", "magasin", "salle", "discotheque", "cuisinier", "brasserie", "addition", "pizza", "gastronomie", "boulangerie", "restaurateur", "mcdonald's", "garcon", "chef", "crêperie", "buffet", "snack", "resto", "poulet", "grill", "mcdo", "vegetarien", "serveur", "dejeuner", "casse-croûte", "menu", "taverne", "diner", "routier", "traiteur", "pub", "restoroute", "bouillon", "gastronomique", "palace", "restau", "sommelier", "table", "serveuse", "reservation", "snack-bar", "resto-bar", "cantine", "aire de restauration", "asiatique", "chinois", "nombre", "dessert", "hamburger", "plat du jour", "sushi", "pâtissier", "tapas", "vietnamien", "guinguette", "mcdo", "refectoire", "huitres", "manger", "Burger King", "assiette", "boissons", "bouillabaisse", "friterie", "grec", "quick", "cafetiere", "cafeine", "tasse", "chocolat", "expresso", "the", "creme", "jus", "moulu", "lait", "cacao", "comptoir", "noisette", "boire", "grain", "arome", "decafeine", "cafe au lait", "tiramisu", "vanille", "cappuccino", "latte", "cannelle", "cerise", "croissant", "tartine", "biscuit", "caramel", "chaude", "muffin", "petit", "noir", "Starbucks", "biere", "irish", "coffee", "noix", "cafetard", "leffee", "nespresso", "banane", "cafe", "filtre", "cafe-concert", "canne a sucre", "coffee", "liquide", "crevettes", "ananas", "espresso", "rhum", "nestle", "cafe", "noir", "riz", "epice", "gamelle", "macchiato", "pousse-cafe", "repas", "frappe", "aromatique", "confiture", "gobelet", "saveur", "petit-dejeuner", "soupe", "cafe", "americain", "capuccino", "nescafe", "glace", "glaces", "sauce", "raisin", "citron", "sirop", "formule", "vinaigre", "orange", "fruit", "limonade", "pulpe", "tomate", "fermente", "presse", "pamplemousse", "betterave", "grenadine", "soda", "sodas", "huile", "abricot", "ail", "marinade", "oignon", "persil", "bouillir", "citronnade", "grenade", "litchi", "grappe", "mandarine", "canette", "cocktail", "framboise", "poire", "coriandre", "fermentation", "gingembre", "mangue", "volaille", "concombre", "citron", "piment", "legumes", "melange", "cola", "salade", "sel", "mayonnaise", "olive", "viande", "veau", "beurre", "carottes", "datte", "bœuf", "boeuf", "cacahuete", "yaourt", "smoothie", "huile", "mate", "the", "menthe"],
@@ -136,7 +134,8 @@ def drawDataOnImage(image_data,resOCR):
     #image.save("res.jpg")
     buffered = BytesIO()
     image.save(buffered, format="JPEG")
-    return force_str(base64.b64encode(buffered.getvalue()))
+    return base64.b64encode(buffered.getvalue()).decode('ascii')
+
 
 def updateSiretBox(box,newbox):
     finalbox = [[],[],[],[]]

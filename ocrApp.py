@@ -223,7 +223,7 @@ def easyOCR():
         calculFini = False
         # si on connait les totaux HT et TTC, on calcule la TVA à la main
         if type(resultatOCR["totalHT"]["value"]) is float and type(resultatOCR["totalTTC"]["value"]) is float:
-            if resultatOCR["totalTTC"]["value"]>=resultatOCR["totalHT"]["value"]:
+            if resultatOCR["totalTTC"]["value"]>resultatOCR["totalHT"]["value"]:
                 resultatOCR["totalTVA"]["value"] = round(resultatOCR["totalTTC"]["value"]-resultatOCR["totalHT"]["value"],2)
                 calculFini = True
                 resultatOCR["totalTVA"]["calculated"] = True
@@ -237,7 +237,7 @@ def easyOCR():
 
         # si on connait les totaux TVA et HT, on calcule le TTC à la main
         if type(resultatOCR["totalTVA"]["value"]) is float and type(resultatOCR["totalHT"]["value"]) is float and not calculFini:
-            if resultatOCR["totalHT"]["value"]>=resultatOCR["totalTVA"]["value"]:
+            if resultatOCR["totalHT"]["value"]>resultatOCR["totalTVA"]["value"]:
                 resultatOCR["totalTTC"]["value"] = round(resultatOCR["totalHT"]["value"]+resultatOCR["totalTVA"]["value"],2)
                 resultatOCR["totalTTC"]["calculated"] = True
         resultatOCR["base64"]["value"] = drawDataOnImage(query,resultatOCR)
