@@ -1,32 +1,20 @@
-from django.shortcuts import render
-from django.db import transaction
-from django.http import Http404
+from flask import Flask
+from flask import request,abort
 import json
 import os
-from django.http import JsonResponse
 import easyocr
 import numpy as np
-from django.views.decorators.csrf import csrf_exempt
-from .dataFinder import *
+from dataFinder import *
 import re
+
+app = Flask("ocrApp")
+
+@app.route("/")
+def hello_world():
+    return "<p>NDFocr</p>"
 
 # views of the website, each function corresponds to a page
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-def index(request):
-    context = {}
-    return render(request, 'website/index.html', context)
-
-
-def handler404(request, exception):
-    context = {}
-    return render(request, '404.html', context)
-
-
-def handler500(request):
-    context = {}
-    return render(request, '500.html', context)
 
 
 def convert(o):
@@ -34,14 +22,12 @@ def convert(o):
         return o.item()
     raise TypeError
 
-
-@csrf_exempt
-@transaction.atomic
-def easyOCR(request):
+@app.route("/ocr",methods=['POST'])
+def easyOCR():
     if request.method == 'POST':
-        query = request.FILES.get('img').read()
+        query = request.files['img'].stream.read()
         if not query:
-            raise Http404("input empty")
+                abort(404)
         reader = easyocr.Reader(['fr', 'en'], gpu=False)
 
         resultatOCR = {
@@ -256,5 +242,5 @@ def easyOCR(request):
                 resultatOCR["totalTTC"]["calculated"] = True
         resultatOCR["base64"]["value"] = drawDataOnImage(query,resultatOCR)
         jsonstring = json.dumps(resultatOCR, default=convert)
-        return JsonResponse(json.loads(jsonstring), safe=False)
-    raise Http404("bad request")
+        return json.loads(jsonstring)
+    abort(404)
